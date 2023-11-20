@@ -4,8 +4,22 @@ from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
+from flask_mail import Mail, Message
+
+
 
 app = Flask(__name__)
+mail = Mail(app)
+
+
+def send_reset_email(user_email, reset_token):
+    msg = Message('Password Reset Request', recipients=[user_email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_token', token=reset_token, _external=True)}
+
+If you did not make this request, simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
 
 # Configuration for MySQL
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -20,6 +34,17 @@ login_manager = LoginManager(app)
 login_manager.session_protection = "strong"
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
+
+
+# email info and logic to sent it
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'your_email@gmail.com'  # Your email
+app.config['MAIL_PASSWORD'] = 'your_password'         # Your email password
+app.config['MAIL_DEFAULT_SENDER'] = 'your_email@gmail.com'
+
 
 # User model
 class User(UserMixin, db.Model):
@@ -48,6 +73,26 @@ def load_api_key():
 def index():
     return render_template('index.html')
 
+@app.route('/reset-password', methods=['POST', 'GET'])
+def reset_password():
+    email = request.form['email']
+    # Logic to send password reset email
+    return render_template('reset_password.html')
+
+@app.route('/reset-link', methods=['POST'])
+def reset_link():
+    # Logic to send password reset email
+    return render_template('email.html')
+
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    email = request.form['email']
+    # Your logic to generate a reset token
+    reset_token = generate_reset_token_for_user(email)
+    
+    send_reset_email(email, reset_token)
+    return render_template('email_sent.html')  # A template that informs the user to check their email
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,9 +113,9 @@ def get_ai_response():
         data = request.json
         user_message = data['message']
         prompt_list = [
-            'You will be a doctor who responds to medical conditions and have an abelyte to participate in small talk\n'
+            'You will be a doctor who responds only to medical-related questions.\n'
             'Human: What time is it?\n'
-            "AI: I'm sorry, I'm noe awer of your local time, but i can help you with any medical-related questions."
+            "AI: I'm sorry, i can answer only to medical-related questions.\n"
         ]
         bot_response = get_bot_response(user_message, prompt_list)
         return jsonify({'botResponse': bot_response})
@@ -150,31 +195,23 @@ VALUES
     prompt += sql_code
     return prompt
 
-
 def get_bot_response(message: str, prompt_list: list[str]) -> str:
-    # Generate the prompt and get the bots response
+    prompt = create_prompt(message, prompt_list)
+    print("Sending to AI:", prompt)  # Debugging statement
+    bot_response = get_api_response(prompt)
+    # Generate the prompt and get the bot's response
     prompt = create_prompt(message, prompt_list)
     bot_response = get_api_response(prompt)
     if bot_response:
-        update_list(bot_response, prompt_list)
-        pos = bot_response.find('\nAI: ')
-        bot_response = bot_response[pos + 5:]
+        update_list('AI: ' + bot_response, prompt_list)
+        return bot_response
     else:
-        bot_response = 'Something went wrong...'
-    return bot_response
+        return 'I am not sure how to respond to that. Can you ask something else?'
 
-
-"""def main():
-    prompt_list = [
-        'You will be a doctor who responds only to medical conditions.\n'
-        'Human: What time is it?\n'
-        'AI: I\'m sorry, but I can only answer medical-related questions.'
-    ]
-    while True:
-        user_input = input('You: ')
-        response = get_bot_response(user_input, prompt_list)
-        print(f'Bot: {response}')
-"""
+def is_relevant(message: str) -> bool:
+    # Implement logic to determine if the message is relevant
+    # For example, check if the message contains certain keywords
+    return "medical" in message.lower() or "health" in message.lower()  # This is a basic example
 
 if __name__ == '__main__':
     load_api_key()
