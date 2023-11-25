@@ -68,6 +68,15 @@ def load_api_key():
     with open('project/static/api_key') as file:
         openai.api_key = file.read()
 
+@app.route('/choose-profile')
+def choose_profile():
+    # Here you can add logic to fetch pre-made profiles if necessary
+    return render_template('choose_profile.html')
+
+@app.route('/about')
+def about():
+    # Here you can add logic to fetch pre-made profiles if necessary
+    return render_template('about_us.html')
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
