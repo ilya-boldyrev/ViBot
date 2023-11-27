@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViBo Health Project</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: wheat;
+      }
+
+      header {
+          text-align: center;
+          background-color: wheat;
+          color: white;
+          padding: 10px 0;
+      }
+
+      .logo {
+          width: 200px;
+          margin-top: 10px;
+      }
+
+      .chat-container {
+          display: flex;
+          justify-content: space-between;
+          max-width: 800px;
+          margin: auto;
+          margin-top: 10px;
+          padding: 20px;
+          background-color: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+
+      .chat-log {
+          width: 70%;
+          margin: 5px;
+          border: 1px solid #cccccc;
+          padding: 10px;
+          min-height: 300px;
+          max-height: 400px;
+          overflow-y: auto;
+          background-color: #fafafa;
+          border-radius: 5px;
+      }
+
+
+      .navbar {
+          background-color: #007bff;
+          overflow: hidden;
+          padding: 10px 0;
+      }
+
+      .navbar a {
+          float: left;
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 20px;
+          text-decoration: none;
+          font-size: 17px;
+      }
+
+      .input-container {
+          width: 28%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+
+      #userInput {
+          margin-top: 5px;
+          padding: 10px;
+          border: 1px solid #cccccc;
+          border-radius: 5px;
+          margin-bottom: 5px;
+      }
+
+      
+      .message.user {
+            text-align: left;
+            color: black;
+        }
+
+        .message.bot {
+            text-align: rightt;
+            color: black;
+        }
+
+      #sendMessage {
+          background-color: #28a745;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          cursor: pointer;
+          border-radius: 5px;
+          font-weight: bold;
+      }
+
+      .login-button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 5px;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-top: 20px;
+          margin-bottom: 5px;
+      }
+
+      .box {
+          text-align: center;
+      }
+
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="/index">Home</a>
+    <a href="/choose-profile">Profiles</a>
+    <a href="/about">About ViBot</a>
+    <!-- Add other navigation links if needed -->
+  </div>
+
+    <form method="post" action="/login" class="box">
+        <button type="submit" class="login-button">
+            Log in / Sign up
+        </button>
+    </form>
+    <header>
+      <img alt="{{ url_for('static', filename='Logo_Vibo_RGB_transparent_web.png') }}"
+      src="../static/Logo_Vibo_RGB_transparent_web.png" style="width: 200px; margin-top: 10px;">
+    </header>
+
+    <div class="chat-container">
+        <div class="chat-log" id="chatLog">
+            <!-- Chat messages will be displayed here -->
+        </div>
+
+       <!-- <div style="text-align: center; margin-top: 20px;"> 
+          <a href="/choose-profile" class="choose-profile-btn">Choose Your Pre-Made Profile</a>
+        </div>
+      -->
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+<script>
+    // script.js
+document.addEventListener("DOMContentLoaded", function () {
+  const chatLog = document.getElementById("chatLog");
+  const userInput = document.getElementById("userInput");
+  const sendMessageBtn = document.getElementById("sendMessage");
+
+  sendMessageBtn.addEventListener("click", () => {
+    const userMessage = userInput.value.trim();  // Trim whitespace
+    if (!userMessage) {
+      alert("Message cannot be empty");
+      return;
+    }
+
+    addMessageToChatLog(userMessage, "user");
+
+    // Disable send button to prevent multiple submissions
+    sendMessageBtn.disabled = true;
+
+    // Make an AJAX request to the Flask server
+    fetch("/get_ai_response", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message: userMessage }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.botResponse) {
+          addMessageToChatLog(data.botResponse, "bot");
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching AI response:", error);
+        addMessageToChatLog("Error fetching AI response. Please try again later.", "error");
+      })
+      .finally(() => {
+        // Re-enable send button
+        sendMessageBtn.disabled = false;
+        userInput.value = "";
+      });
+  });
+
+  function addMessageToChatLog(message, sender) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${sender}`;
+    messageDiv.textContent = message;
+    chatLog.appendChild(messageDiv);
+  }
+
+    // Add keypress event listener to the userInput
+    userInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent the default action to stop form submission
+                    sendMessageBtn.click(); // Trigger click on the send button
+                }
+            });
+
+    
+            function addMessageToChatLog(message, sender) {
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = sender.toUpperCase() + ": " + message;
+                chatLog.appendChild(messageDiv);
+
+                // Scroll to the bottom of the chat log
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }
+
+            // Handling Enter key for sending messages
+            userInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMessageBtn.click();
+                }
+            });
+});
+
+
+</script>
+</body>
+</html>
