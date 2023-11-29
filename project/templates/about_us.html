@@ -38,6 +38,35 @@
             line-height: 1.6;
         }
 
+        @media (max-width: 768px) {
+            .content {
+                width: 95%; /* Adjust width for smaller screens */
+                padding: 10px; /* Adjust padding */
+            }
+
+            h1, h2, h3 {
+                font-size: 18px; /* Adjust font size */
+            }
+
+            p, ul {
+                font-size: 14px; /* Adjust font size */
+            }
+
+            .header, .footer {
+                padding: 5px 0; /* Adjust padding */
+            }
+        }
+
+        .home-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
         .footer {
             background-color: #333;
             color: white;
@@ -50,7 +79,9 @@
 <body>
     <div class="header">
         <h1>ViBot - Your Virtual Health Assistant</h1>
+        <a href="{{ url_for('index') }}" class="home-button">Home</a>
     </div>
+
 
     <div class="content">
         <h2>About ViBot</h2>
