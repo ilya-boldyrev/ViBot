@@ -25,7 +25,7 @@
 }
 
 .profile-card {
-    background-color: rgb(193, 218, 255);
+    background-color: whitesmoke;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -81,11 +81,33 @@
     padding: 10px;
     margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            .profile-card, .profile {
+                padding: 10px;
+                margin-top: 15px;
+            }
+
+            .chat-area, .redirect-button {
+                width: 100%;
+                box-sizing: border-box; /* Ensures padding doesn't add to width */
+            }
+
+            .redirect-button {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>ViBot</h1>
+        <h1>ViBot - Your Virtual Health Assistant</h1>
     </div>
 
     <div class="container">
@@ -139,7 +161,7 @@
                 <!-- Chat interface here -->
                 <form method="post" action="/index" class="box">
                     <button type="submit" class="redirect-button">
-                        Talk to the ViBot
+                        Home
                     </button>
             </div>
         </div>
