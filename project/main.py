@@ -68,6 +68,14 @@ def load_api_key():
     with open('project/static/api_key') as file:
         openai.api_key = file.read()
 
+@app.route('/')
+def root():
+    return redirect(url_for('index'))
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
+
 @app.route('/choose-profile')
 def choose_profile():
     # Here you can add logic to fetch pre-made profiles if necessary
@@ -87,9 +95,7 @@ def about():
     # Here you can add logic to fetch pre-made profiles if necessary
     return render_template('about_us.html')
 
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
+
 
 @app.route('/reset-password', methods=['POST', 'GET'])
 def reset_password():
@@ -239,4 +245,4 @@ def is_relevant(message: str) -> bool:
 
 if __name__ == '__main__':
     load_api_key()
-    app.run(debug=True, port=5000)
+    app.run(host='127.0.0.1', port=5000)
