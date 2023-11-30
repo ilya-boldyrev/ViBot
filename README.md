@@ -66,6 +66,3 @@ markdown
 - **Authors**: List the main contributors to the project.
 - **License**: Include details about the project's licensing.
 - **Acknowledgments**: Recognize any contributions or inspirations.
-
-Ensure you replace placeholder text with information specific to the ViBo project. If there are additional sections or details relevant to your project, be sure to include them. &#8203;``【oaicite:0】``&#8203;
-
