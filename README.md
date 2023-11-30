@@ -1,4 +1,4 @@
-# ViBo Project
+# ViBot Project
 
 ## Introduction
 ViBo is a virtual health assistant designed to provide users with medical guidance and information. This project leverages modern web technologies to offer an interactive and user-friendly platform for health-related inquiries.
