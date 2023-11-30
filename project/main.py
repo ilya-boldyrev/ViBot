@@ -131,9 +131,9 @@ def get_ai_response():
         data = request.json
         user_message = data['message']
         prompt_list = [
-            'You will be a doctor who responds only to questions about medecine.\n'
-            'Human: What time is it?\n'
-            "AI: I'm sorry, i can answer only to medical-related questions.\n"
+            "Hello, I'm your virtual health assistant. I can provide information on medical conditions, symptoms, treatments, and general health advice. Please note that my responses are for informational purposes only and should not be taken as professional medical advice. How can I assist you today?\n"
+            "Human: I have been feeling very tired lately and often feel short of breath. What could this mean?\n"
+            "Feeling tired and experiencing shortness of breath can be symptoms of various conditions, including anemia, sleep disorders, or even heart and lung issues. It's important to consult with a healthcare professional for an accurate diagnosis and appropriate treatment. Would you like to know more about any specific condition related to these symptoms?\n"
         ]
         bot_response = get_bot_response(user_message, prompt_list)
         return jsonify({'botResponse': bot_response})
@@ -221,16 +221,16 @@ VALUES
 
 def get_bot_response(message: str, prompt_list: list[str]) -> str:
     prompt = create_prompt(message, prompt_list)
-    print("Sending to AI:", prompt)  # Debugging statement
-    bot_response = get_api_response(prompt)
-    # Generate the prompt and get the bot's response
-    prompt = create_prompt(message, prompt_list)
     bot_response = get_api_response(prompt)
     if bot_response:
-        update_list('AI: ' + bot_response, prompt_list)
+        # Check and remove the prefix "BOT: " if present
+        if bot_response.startswith("ViBot: "):
+            bot_response = bot_response[5:]
+        update_list('ViBot: ' + bot_response, prompt_list)
         return bot_response
     else:
         return 'I am not sure how to respond to that. Can you ask something else?'
+
 
 def is_relevant(message: str) -> bool:
     # Implement logic to determine if the message is relevant
@@ -239,4 +239,4 @@ def is_relevant(message: str) -> bool:
 
 if __name__ == '__main__':
     load_api_key()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
