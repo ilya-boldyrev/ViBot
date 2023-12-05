@@ -76,26 +76,21 @@ def root():
 def index():
     return render_template('index.html')
 
+@app.route('/chat/<int:profile_id>')
+def chat(profile_id):
+    profile_name = profiles.get(profile_id, {}).get('name', 'Unknown')
+    return render_template('chat.html', profile_id=profile_id, profile_name=profile_name)
+
 @app.route('/choose-profile')
 def choose_profile():
     # Here you can add logic to fetch pre-made profiles if necessary
     return render_template('choose_profile.html')
-
-@app.route('/profile/<profile_key>')
-def profile_detail(profile_key):
-    # Assuming you have a dictionary or a function to get the profile details
-    profile = profile_key  # get_profile_details is a hypothetical function
-    if profile is None:
-        return "Profile not found", 404
-    return render_template('profile_detail.html', profile=profiles)
 
 
 @app.route('/about')
 def about():
     # Here you can add logic to fetch pre-made profiles if necessary
     return render_template('about_us.html')
-
-
 
 @app.route('/reset-password', methods=['POST', 'GET'])
 def reset_password():
