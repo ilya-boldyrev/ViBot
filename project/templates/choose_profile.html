@@ -25,7 +25,7 @@
 }
 
 .profile-card {
-    background-color: rgb(197, 196, 196);
+    background-color: whitesmoke;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
@@ -133,35 +133,31 @@
             <div class="profile-card">
                 <h3>Non-Diabetic Profile</h3>
                 <p>This profile represents a non-diabetic individual with normal blood sugar levels.</p>
-                <form method="post" action="/index" class="box">
-                    <form method="post" action="/index" class="box">
-                        <button type="submit" class="redirect-button">
-                            Talk to the ViBot and find-out more
-                        </button>
+                <form method="get" action="{{ url_for('chat', profile_id=1) }}">
+                    <button type="submit" class="redirect-button">Non-Diabetic Profile</button>
+                </form>
             </div>
 
             <div class="profile-card">
                 <h3>Pre-Diabetic Profile</h3>
                 <p>This profile is for individuals with blood sugar levels higher than normal but not high enough to be classified as diabetes.</p>
-                <form method="post" action="/index" class="box">
-                    <button type="submit" class="redirect-button">
-                        Talk to the ViBot and find-out more
-                    </button>
+                <form method="get" action="{{ url_for('chat', profile_id=2) }}">
+                    <button type="submit" class="redirect-button">Pre-Diabetic Profile</button>
+                </form>
             </div>
 
             <div class="profile-card">
                 <h3>Diabetic Profile</h3>
                 <p>This profile represents an individual diagnosed with diabetes, requiring careful blood sugar management.</p>
-                <form method="post" action="/index" class="box">
-                    <button type="submit" class="redirect-button">
-                        Talk to the ViBot and find-out more
-                    </button>
+                <form method="get" action="{{ url_for('chat', profile_id=3) }}">
+                    <button type="submit" class="redirect-button">Diabetic Profile</button>
+                </form>
             </div>
         </div>
                 <!-- Chat interface here -->
                 <form method="post" action="/index" class="box">
                     <button type="submit" class="redirect-button">
-                        Home
+                        ViBot
                     </button>
             </div>
         </div>
