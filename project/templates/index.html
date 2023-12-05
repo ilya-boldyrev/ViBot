@@ -12,19 +12,52 @@
           background-color: whitesmoke;
       }
 
-      header {
-        display: flex;
-        justify-content: center; /* Center the content */
-        align-items: center;
-        background-color: whitesmoke;
-        padding: 10px 0;
-      }
+      .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white; /* Adjst background color as needed */
+    color: black;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-      .logo img {
-          width: 200px;
-          display: block; /* Make the image a block element to center it */
-          margin: auto; /* Auto margin to center */
-      }
+.logo img {
+  margin: auto;
+  display: block;
+  width: 200px; /* Adjust as needed */
+  height: auto;
+}
+
+.choosen {
+    text-align: center;
+}
+
+.choosen h1 {
+    margin: 0;
+    font-size: 1.6em; /* Adjust font size as needed */
+}
+
+.choosen p {
+    margin: 5px 0 0;
+    font-size: 1.2em; /* Adjust font size as needed */
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo, .choosen {
+        margin-bottom: 10px;
+    }
+
+    .choosen {
+        text-align: center;
+    }
+}
+
 
       .chat-container {
           display: flex;
@@ -184,6 +217,10 @@
         <img alt="{{ url_for('static', filename='Logo_Vibo_RGB_transparent_web.png') }}"
         src="../static/Logo_Vibo_RGB_transparent_web.png" style="width: 200px; margin-top: 10px;">
       </div>
+      <div class="choosen">
+        <h1>Welcome to ViBot</h1>
+        <p>You have chosen the {{ profile_name }} profile. How can I assist you today?</p>
+      </div>
   </header>
 
     <div class="chat-container">
@@ -265,6 +302,21 @@ document.addEventListener("DOMContentLoaded", function () {
     messageDiv.textContent = message;
     chatLog.appendChild(messageDiv);
   }
+
+  function sendMessageToFlask(message) {
+    fetch('/get_ai_response', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response from Flask
+        console.log(data.botResponse);
+    });
+}
 
     // Add keypress event listener to the userInput
     userInput.addEventListener('keypress', function (e) {
