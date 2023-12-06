@@ -68,7 +68,6 @@ shell==1.0.1
 six==1.13.0
 SQLAlchemy==2.0.23
 sqlparse==0.4.4
-te==1.0.1
 threadpoolctl==3.2.0
 tqdm==4.66.1
 typing_extensions==4.8.0
