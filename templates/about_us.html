@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About ViBot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #006666;
+            padding: 10px 0;
+            color: black;
+        }
+
+        .content {
+            width: 80%;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            color: #006666;
+        }
+
+        h1 {
+            color: #f4f4f4;
+        }
+
+        h2, h3 {
+            color:#016363;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #006666;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                width: 95%; /* Adjust width for smaller screens */
+                padding: 10px; /* Adjust padding */
+            }
+
+            h1, h2, h3 {
+                font-size: 18px; /* Adjust font size */
+            }
+
+            p, ul {
+                font-size: 14px; /* Adjust font size */
+            }
+
+            .header, .footer {
+                padding: 5px 0; /* Adjust padding */
+            }
+        }
+
+        .home-button {
+            background-color: whitesmoke;
+            color: #006666;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: auto;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ViBot - Your Virtual Health Assistant</h1>
+        <a href="{{ url_for('index') }}" class="home-button"><strong>Home</strong></a>
+    </div>
+
+
+    <div class="content">
+        <h2>Disclaimer</h2>
+        <p>Please note that ViBot is a demonstration tool intended to showcase the art of the possible in AI-driven health assistance. It is not designed for actual medical use and should not be relied upon for any diagnostic or treatment purposes. The information provided by ViBot is for entertainment and demonstration purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+        <h2>About ViBot</h2>
+        <p>ViBot is an innovative virtual assistant designed to revolutionize the way you manage your health. Utilizing the latest advancements in AI and machine learning, ViBot provides personalized health advice, answers medical queries, and assists with symptom analysis.</p>
+
+        <h3>Features</h3>
+        <ul>
+            <li>Personalized Health Recommendations</li>
+            <li>24/7 Availability for Medical Queries</li>
+            <li>Symptom Checker and Analysis</li>
+            <li>Integration with Health Tracking Apps</li>
+            <li>Confidential and Secure Conversations</li>
+        </ul>
+
+        <h3>Benefits</h3>
+        <ul>
+            <li>Instant Access to Medical Information</li>
+            <li>Guidance on Health and Wellness</li>
+            <li>Easy to Use and Accessible Anywhere</li>
+            <li>Supports a Proactive Approach to Health</li>
+        </ul>
+
+        <p>ViBot is not just a chatbot; it's a companion in your journey towards a healthier life. It's designed to empower you with knowledge and support, making health management more accessible and less intimidating.</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2023 ViBo Health Project. All rights reserved.</p>
+    </div>
+</body>
+</html>

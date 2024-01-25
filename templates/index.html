@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViBot</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        background-color: whitesmoke;    
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: white;
+        color: black;
+        padding: 15px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo img {
+    margin: auto;
+    display: block;
+    width: 200px; 
+    height: auto;
+    }
+
+    .choosen {
+        text-align: center;
+    }
+
+    .choosen h1 {
+        margin: 0;
+    }
+
+    .choosen p {
+        margin: 5px 0 0;
+        font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .logo, .choosen {
+            margin-bottom: 10px;
+        }
+
+        .choosen {
+            text-align: center;
+        }
+    }
+
+
+      .chat-container {
+          display: flex;
+          justify-content: space-between;
+          max-width: 800px;
+          margin: auto;
+          margin-top: 10px;
+          margin-bottom: 50px;
+          padding: 20px;
+          background-color: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          
+        }
+
+      .chat-log {
+          width: 70%;
+          margin: 5px;
+          border: 1px solid #cccccc;
+          padding: 10px;
+          min-height: 300px;
+          max-height: 400px;
+          overflow-y: auto;
+          background-color: #fafafa;
+          border-radius: 5px;
+        }
+
+
+      .navbar {
+          display: flex;
+          background-color: #006666;
+          overflow: hidden;
+          padding: 10px 0;
+        }
+
+      .navbar a, .login-link {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 20px;
+          text-decoration: none;
+          font-size: 17px;
+        }
+
+      .login {
+          background-color: #007bff;
+          border-radius: 5px;
+          margin-left: auto;
+          font-family: 'Consolas', monospace; 
+        }
+
+      /* Responsive adjustments */
+    
+
+      .input-container {
+          width: 28%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+    #userInput {
+          margin-top: 5px;
+          padding: 10px;
+          border: 1px solid #cccccc;
+          border-radius: 5px;
+          margin-bottom: 5px;
+        }
+
+      
+    .message.user {
+        color: #000000; /* Choose your preferred color for the user's messages */
+        background-color: #ffffff; /* Lighter shade for the background for better readability */
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: inline-block;
+        max-width: 80%;
+        }
+
+    .message.bot {
+        color: #000000; /* Choose your preferred color for the bot's messages */
+        background-color:#d2d2d2a2; /* Lighter shade for the background for better readability */
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: inline-block;
+        max-width: 80%;
+        }
+
+    #sendMessage {
+        background-color: #006666;
+        color: white;
+        border: none;
+        padding: 5px 7px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-bottom: auto;
+        }
+
+    #scanResults {
+        margin: 10px 0; /* Add top and bottom margin for spacing */
+        width: 100%; /* Adjust width as needed */
+        text-align: left;
+        background-color: #f8f9fa; /* Give it a slight background */
+        border: 1px solid #dee2e6; /* A light border for visibility */
+        border-radius: 5px;
+        padding: 5px;
+        box-sizing: border-box; /* Include padding in the width calculation */
+        overflow: auto; /* In case content is too large */
+        height: 120px; /* Or any other height */
+    }
+
+    #generateScan {
+        background-color: #006666;
+        color: white;
+        border: none;
+        padding: 5px 7px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: auto;
+    }
+
+    .login-button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          cursor: pointer;
+          border-radius: 5px;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-top: 0px;
+          margin-bottom: 5px;
+    }
+
+    .box {
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+    @media (max-width: 768px) {
+        .chat-container {
+              flex-direction: column;
+              padding: 10px;
+        }
+
+        .chat-log, .input-container {
+              width: 100%;
+              margin: 5px 0;
+        }
+
+        .navbar a {
+              display: block;
+              width: 100%;
+              margin: 5px 0; /* Add some space between links */
+        }
+
+        header {
+              text-align: center;
+        }
+
+        .login-button, #sendMessage {
+              width: 100%;
+              margin-top: 10px;
+        }
+
+        .logo {
+              width: 150px; /* Adjust logo size for smaller screens */
+        }
+      }
+
+</style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <a href="/index">Home</a>
+    <a href="/choose-profile">Profiles</a>
+    <a href="/about">About ViBot</a>
+    <a href="/login">Log-In</a>
+    <!-- Add other navigation links if needed -->
+  </div>
+    <header>
+        <div class="logo">
+            <img alt="Logo" src="../static/Logo_Vibo_RGB_transparent_web.png" style="width: 200px; margin-top: 10px;">
+        </div>
+        <div class="choosen">    
+            <h1 style="font-size: 24px;">Welcome to ViBot</h1>
+            <!-- Use the 'safe' filter to render the welcome_message as HTML -->
+            <p style="font-size: 17px;">{{ welcome_message|safe }}</p>
+        </div>
+  </header>
+    <div class="chat-container">
+        <div class="chat-log" id="chatLog"></div>
+        
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button id="sendMessage">Send</button> 
+            <button id="generateScan">Generate Random Scan</button>
+            <pre id="randomScanResults">randomScanResults</pre>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const chatLog = document.getElementById("chatLog");
+    const userInput = document.getElementById("userInput");
+    const sendMessageBtn = document.getElementById("sendMessage");
+    const generateScanBtn = document.getElementById("generateScan");
+
+    // Function to send user message
+    function sendUserMessage() {
+        const userMessage = userInput.value.trim();
+        if (!userMessage) {
+            alert("Message cannot be empty");
+            return;
+        }
+
+        addMessageToChatLog(userMessage, "user");
+        sendMessageBtn.disabled = true;
+        fetch("/get_ai_response", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message: userMessage }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.botResponse) {
+                addMessageToChatLog(data.botResponse, "bot");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            addMessageToChatLog("Error fetching AI response. Please try again.", "error");
+        })
+        .finally(() => {
+            sendMessageBtn.disabled = false;
+            userInput.value = "";
+        });
+    }
+    
+
+    // Add click event listener to send message button
+    sendMessageBtn.addEventListener("click", sendUserMessage);
+
+    // Event listener for the 'Enter' key
+    userInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendUserMessage();
+        }
+    });
+
+    // Event listener for generating random scan
+    generateScanBtn.addEventListener("click", function() {
+        fetch('/generate_random_scan')
+            .then(response => response.json())
+            .then(data => {
+                const scanResultsElement = document.getElementById('randomScanResults');
+                if (scanResultsElement) {
+                    scanResultsElement.innerText = JSON.stringify(data, null, 2);
+                } else {
+                    console.error("The 'randomScanResults' element was not found on the page.");
+                }
+            })
+            .catch(error => console.error('Error fetching random scan:', error));
+    });
+
+    function addMessageToChatLog(message, sender) {
+        if (sender === 'bot') {
+            message = message.replace(/BOT:/, 'ViBot:');
+        }
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+        messageDiv.textContent = sender.toUpperCase() + ": " + message;
+        chatLog.appendChild(messageDiv);
+        chatLog.scrollTop = chatLog.scrollHeight;
+    }
+});
+    </script>
+</body>
+</html>
