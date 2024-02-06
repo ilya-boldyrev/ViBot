@@ -1,9 +1,12 @@
 import openai
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import random
-
+from flask_socketio import SocketIO
+import time
+from threading import Thread
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 #Random scan function 
 def random_value_in_range(range_string):
@@ -47,6 +50,17 @@ def generate_random_scan_endpoint():
 with open('static/API') as file:
     openai.api_key = file.read().strip()
 
+
+def generate_and_emit_text():
+    sentences = ["Hello, ", "how are ", "you today?"]
+    for sentence in sentences:
+        time.sleep(2)  # Simulate processing delay
+        socketio.emit('text_update', {'text': sentence})
+
+@app.route('/start_text_generation')
+def start_text_generation():
+    Thread(target=generate_and_emit_text).start()
+    return 'Started text generation'
 
 @app.route('/')
 def root():
@@ -227,4 +241,4 @@ def get_bot_response(user_message: str, prompt_list: list[str]) -> str:
         return 'I am not sure how to respond to that. Can you ask something else?'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port="8080")
+    socketio.run(app, host='0.0.0.0', port="8080")
