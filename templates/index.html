@@ -270,84 +270,47 @@
             <pre id="randomScanResults">randomScanResults</pre>
         </div>
     </div>
-    <script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
         document.addEventListener("DOMContentLoaded", function () {
-    const chatLog = document.getElementById("chatLog");
-    const userInput = document.getElementById("userInput");
-    const sendMessageBtn = document.getElementById("sendMessage");
-    const generateScanBtn = document.getElementById("generateScan");
-
-    // Function to send user message
-    function sendUserMessage() {
-        const userMessage = userInput.value.trim();
-        if (!userMessage) {
-            alert("Message cannot be empty");
-            return;
-        }
-
-        addMessageToChatLog(userMessage, "user");
-        sendMessageBtn.disabled = true;
-        fetch("/get_ai_response", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ message: userMessage }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.botResponse) {
-                addMessageToChatLog(data.botResponse, "bot");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            addMessageToChatLog("Error fetching AI response. Please try again.", "error");
-        })
-        .finally(() => {
-            sendMessageBtn.disabled = false;
-            userInput.value = "";
-        });
-    }
-    
-
-    // Add click event listener to send message button
-    sendMessageBtn.addEventListener("click", sendUserMessage);
-
-    // Event listener for the 'Enter' key
-    userInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            sendUserMessage();
-        }
-    });
-
-    // Event listener for generating random scan
-    generateScanBtn.addEventListener("click", function() {
-        fetch('/generate_random_scan')
-            .then(response => response.json())
-            .then(data => {
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+            socket.on('connect', function() {
+                console.log('Websocket connected!');
+            });
+        
+            socket.on('receive_message', function(data) {
+                console.log('Message received: ', data);
+                addMessageToChatLog(data.message, data.sender);
+            });
+        
+            socket.on('scan_results', function(data) {
                 const scanResultsElement = document.getElementById('randomScanResults');
                 if (scanResultsElement) {
-                    scanResultsElement.innerText = JSON.stringify(data, null, 2);
-                } else {
-                    console.error("The 'randomScanResults' element was not found on the page.");
+                    scanResultsElement.innerText = JSON.stringify(data.data, null, 2);
                 }
-            })
-            .catch(error => console.error('Error fetching random scan:', error));
-    });
-
-    function addMessageToChatLog(message, sender) {
-        if (sender === 'bot') {
-            message = message.replace(/BOT:/, 'ViBot:');
-        }
-        const messageDiv = document.createElement("div");
-        messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = sender.toUpperCase() + ": " + message;
-        chatLog.appendChild(messageDiv);
-        chatLog.scrollTop = chatLog.scrollHeight;
-    }
-});
-    </script>
+            });
+        
+            document.getElementById("sendMessage").addEventListener("click", function() {
+                var userMessage = document.getElementById("userInput").value;
+                socket.emit('send_message', {message: userMessage, sender: 'user'});
+            });
+        
+            document.getElementById("generateScan").addEventListener("click", function() {
+                socket.emit('generate_random_scan');
+            });
+        
+            function addMessageToChatLog(message, sender) {
+                const chatLog = document.getElementById("chatLog");
+                const messageDiv = document.createElement("div");
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = sender.toUpperCase() + ": " + message;
+                chatLog.appendChild(messageDiv);
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }
+        });
+        </script>
+        
 </body>
 </html>
